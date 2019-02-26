@@ -1,5 +1,3 @@
-# Set linux Alpine 3.7 image with ruby 2.5 installed
-# Others oficial ruby images: https://hub.docker.com/_/ruby/
 FROM thyrlian/android-sdk
 
 # Define environment variables
