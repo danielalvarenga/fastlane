@@ -3,7 +3,9 @@ FROM thyrlian/android-sdk
 # Define environment variables
 ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
+ENV RBENV_DIR ~/.rbenv
 ENV RUBY_VERSION 2.5.3
+ENV RUBY_VERSION_PATH 2.5
 ENV NODE_MAJOR_VERSION 10
 ENV YARN_VERSION 1.13.0
 
@@ -12,17 +14,18 @@ RUN apt-get update
 RUN apt-get install -y build-essential git-core curl \
   zlib1g-dev libssl-dev libreadline-dev libyaml-dev \
   libxml2-dev libxslt1-dev libcurl4-openssl-dev \
-  software-properties-common libffi-dev apt-transport-https
+  software-properties-common libffi-dev apt-transport-https \
+  autoconf bison libssl-dev  libreadline6-dev libncurses5-dev \
+  libgdbm3 libgdbm-dev
 
 # Install Ruby
-RUN apt-get install -y rbenv ruby-build ruby-dev
-RUN git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
-
-RUN rbenv install -l
-RUN rbenv install $RUBY_VERSION
-
-RUN echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-RUN rbenv global $RUBY_VERSION
+RUN cd
+RUN wget http://ftp.ruby-lang.org/pub/ruby/$RUBY_VERSION_PATH/ruby-$RUBY_VERSION.tar.gz
+RUN tar -xzvf ruby-$RUBY_VERSION.tar.gz
+RUN cd ruby-$RUBY_VERSION/
+RUN ./ruby-$RUBY_VERSION/configure
+RUN make
+RUN make install
 
 RUN gem install bundler
 
